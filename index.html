@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Transforme Planilhas em Sistemas - Rogerinho Ramos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            overflow: hidden;
+            height: 100vh;
+            touch-action: pan-y;
+        }
+
+        .mobile-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slide {
+            width: 100vw;
+            height: 100vh;
+            display: none;
+            position: relative;
+            padding: 1rem;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center;
+            animation: slideInMobile 0.5s ease-out;
+            overflow-y: auto;
+        }
+
+        .slide.active {
+            display: flex;
+        }
+
+        @keyframes slideInMobile {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Slide específicos */
+        .intro-slide {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .intro-slide h1 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            line-height: 1.2;
+        }
+
+        .intro-slide .subtitle {
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+            line-height: 1.4;
+        }
+
+        .intro-slide .highlight {
+            background: rgba(255,255,255,0.2);
+            padding: 1.5rem;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.3);
+            max-width: 350px;
+            width: 100%;
+        }
+
+        .intro-slide .highlight h3 {
+            font-size: 0.9rem;
+            line-height: 1.4;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Problem slide */
+        .problem-slide {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            color: white;
+        }
+
+        .problem-slide h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .problems-list {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            width: 100%;
+            max-width: 350px;
+        }
+
+        .problem-item {
+            background: rgba(255,255,255,0.1);
+            padding: 1rem;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .problem-item h3 {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .problem-item p {
+            font-size: 0.9rem;
+        }
+
+        /* Solution slide */
+        .solution-slide {
+            background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+            color: white;
+        }
+
+        .solution-slide h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .solutions-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            width: 100%;
+            max-width: 350px;
+        }
+
+        .solution-item {
+            background: rgba(255,255,255,0.15);
+            padding: 1rem;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .solution-item:active {
+            transform: scale(0.95);
+        }
+
+        .solution-item .icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .solution-item h3 {
+            font-size: 0.8rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .solution-item p {
+            font-size: 0.7rem;
+        }
+
+        /* Portfolio slides */
+        .portfolio-slide {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 0.5rem;
+        }
+
+        .portfolio-slide h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .demo-image {
+            background: white;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            max-width: 350px;
+            width: 100%;
+        }
+
+        .portfolio-description {
+            background: rgba(255,255,255,0.1);
+            padding: 1rem;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            max-width: 350px;
+            width: 100%;
+        }
+
+        .portfolio-description p {
+            font-size: 0.8rem;
+            margin-bottom: 0.5rem;
+            line-height: 1.3;
+        }
+
+        /* CTA slide */
+        .cta-slide {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        .cta-slide h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-content {
+            background: rgba(255,255,255,0.1);
+            padding: 1.5rem;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.3);
+            max-width: 350px;
+            width: 100%;
+        }
+
+        .cta-button {
+            background: #fff;
+            color: #f5576c;
+            padding: 0.8rem 1rem;
+            border: none;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 0.3rem;
+            transition: transform 0.3s ease;
+            display: block;
+            width: 100%;
+            text-decoration: none;
+            box-sizing: border-box;
+        }
+
+        .cta-button:active {
+            transform: scale(0.95);
+        }
+
+        /* Mobile Navigation */
+        .mobile-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px);
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .nav-btn-mobile {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 0.8rem;
+            border-radius: 50%;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-btn-mobile:active {
+            background: rgba(255,255,255,0.4);
+            transform: scale(0.9);
+        }
+
+        .slide-info {
+            color: white;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .progress-bar-mobile {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #667eea);
+            transition: width 0.3s ease;
+            z-index: 1000;
+        }
+
+        /* Touch gestures */
+        .slide {
+            touch-action: pan-x;
+        }
+
+        /* Specific mobile layouts for portfolio slides */
+        .mobile-calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+            max-width: 280px;
+            margin: 0 auto;
+        }
+
+        .mobile-calendar div {
+            padding: 4px;
+            text-align: center;
+            font-size: 0.7rem;
+            border-radius: 3px;
+        }
+
+        .mobile-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .mobile-stat-card {
+            background: #f8f9fa;
+            padding: 0.8rem;
+            border-radius: 8px;
+            border-left: 3px solid #6c5ce7;
+        }
+
+        .mobile-stat-card h4 {
+            color: #6c5ce7;
+            font-size: 0.9rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .mobile-stat-card p {
+            font-size: 0.7rem;
+            color: #666;
+        }
+
+        /* Swipe indicator */
+        .swipe-indicator {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255,255,255,0.7);
+            font-size: 0.8rem;
+            z-index: 999;
+            animation: fadeInOut 3s infinite;
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="mobile-container">
+        <div class="progress-bar-mobile" id="progressBar"></div>
+        <div class="swipe-indicator" id="swipeIndicator">👈 Deslize ou use os botões 👉</div>
+
+        <!-- Slide 1: Introdução -->
+        <div class="slide intro-slide active">
+            <h1>🚀 Transforme suas Planilhas em Sistemas</h1>
+            <p class="subtitle">De dados estáticos para soluções dinâmicas e inteligentes</p>
+            <div class="highlight">
+                <h3>✨ Dashboards Interativos<br>🔗 Integração com APIs<br>📱 Apps Mobile-Friendly</h3>
+                <p><strong>Rogerinho Ramos</strong></p>
+            </div>
+        </div>
+
+        <!-- Slide 2: Problemas -->
+        <div class="slide problem-slide">
+            <h2>😤 Problemas das Planilhas</h2>
+            <div class="problems-list">
+                <div class="problem-item">
+                    <h3>📊 Dados Estáticos</h3>
+                    <p>Informações desatualizadas</p>
+                </div>
+                <div class="problem-item">
+                    <h3>🤝 Falta Colaboração</h3>
+                    <p>Dificuldade em equipe</p>
+                </div>
+                <div class="problem-item">
+                    <h3>📱 Sem Mobilidade</h3>
+                    <p>Não funciona no celular</p>
+                </div>
+                <div class="problem-item">
+                    <h3>🔗 Sem Integração</h3>
+                    <p>Isolado de outros sistemas</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Soluções -->
+        <div class="slide solution-slide">
+            <h2>✅ Nossas Soluções</h2>
+            <div class="solutions-grid">
+                <div class="solution-item">
+                    <div class="icon">📈</div>
+                    <h3>Dashboards Dinâmicos</h3>
+                    <p>Tempo real</p>
+                </div>
+                <div class="solution-item">
+                    <div class="icon">🔔</div>
+                    <h3>Notificações</h3>
+                    <p>Email e Telegram</p>
+                </div>
+                <div class="solution-item">
+                    <div class="icon">📱</div>
+                    <h3>Responsivo</h3>
+                    <p>Qualquer dispositivo</p>
+                </div>
+                <div class="solution-item">
+                    <div class="icon">🔒</div>
+                    <h3>Controle Acesso</h3>
+                    <p>Usuários e permissões</p>
+                </div>
+                <div class="solution-item">
+                    <div class="icon">📊</div>
+                    <h3>Relatórios</h3>
+                    <p>Análises automáticas</p>
+                </div>
+                <div class="solution-item">
+                    <div class="icon">🔗</div>
+                    <h3>Integrações</h3>
+                    <p>APIs e sistemas</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Calendário de Férias -->
+        <div class="slide portfolio-slide">
+            <h2>📅 Gestão de Férias</h2>
+            <div class="demo-image">
+                <div style="color: #333; text-align: center;">
+                    <h3 style="color: #4285f4; margin-bottom: 0.5rem; font-size: 1rem;">Calendário Interativo</h3>
+                    <div class="mobile-calendar">
+                        <div style="background: #4285f4; color: white;">D</div>
+                        <div style="background: #4285f4; color: white;">S</div>
+                        <div style="background: #4285f4; color: white;">T</div>
+                        <div style="background: #4285f4; color: white;">Q</div>
+                        <div style="background: #4285f4; color: white;">Q</div>
+                        <div style="background: #4285f4; color: white;">S</div>
+                        <div style="background: #4285f4; color: white;">S</div>
+                        <div>1</div>
+                        <div style="background: #e8f0fe;">2<br>João</div>
+                        <div style="background: #e8f0fe;">3<br>Maria</div>
+                        <div>4</div>
+                        <div>5</div>
+                        <div>6</div>
+                        <div>7</div>
+                    </div>
+                    <p style="margin-top: 0.5rem; color: #666; font-size: 0.8rem;">Turnos e programação visual</p>
+                </div>
+            </div>
+            <div class="portfolio-description">
+                <p><strong>🎯 Transformação:</strong> Planilha → Sistema automatizado</p>
+                <p><strong>✨ Recursos:</strong> Calendário interativo, turnos</p>
+                <p><strong>📊 Resultado:</strong> 80% menos tempo</p>
+            </div>
+        </div>
+
+        <!-- Slide 5: Dashboard Performance -->
+        <div class="slide portfolio-slide">
+            <h2>📊 Dashboard Performance</h2>
+            <div class="demo-image">
+                <div style="color: #333;">
+                    <h3 style="color: #6c5ce7; margin-bottom: 0.5rem; font-size: 1rem;">Análise 360°</h3>
+                    <div class="mobile-stats">
+                        <div class="mobile-stat-card">
+                            <h4>81.5%</h4>
+                            <p>Média Geral</p>
+                        </div>
+                        <div class="mobile-stat-card">
+                            <h4>Horário</h4>
+                            <p>Melhor Área</p>
+                        </div>
+                        <div class="mobile-stat-card">
+                            <h4>Crescimento</h4>
+                            <p>Para Melhorar</p>
+                        </div>
+                        <div class="mobile-stat-card">
+                            <h4>26</h4>
+                            <p>Avaliações</p>
+                        </div>
+                    </div>
+                    <p style="color: #666; font-size: 0.8rem;">Gráficos interativos por setor</p>
+                </div>
+            </div>
+            <div class="portfolio-description">
+                <p><strong>🎯 Transformação:</strong> Gráficos estáticos → Dashboard interativo</p>
+                <p><strong>✨ Recursos:</strong> Análise radar, comparativos</p>
+                <p><strong>📈 Resultado:</strong> Visibilidade 360°</p>
+            </div>
+        </div>
+
+        <!-- Slide 6: Sistema Telegram -->
+        <div class="slide portfolio-slide">
+            <h2>🍽️ Sistema Telegram</h2>
+            <div class="demo-image">
+                <div style="background: #2c3e50; padding: 1rem; border-radius: 10px; color: white;">
+                    <h3 style="color: #f39c12; margin-bottom: 0.5rem; font-size: 0.9rem;">🤖 Bot Refeições</h3>
+                    <div style="background: #34495e; padding: 0.8rem; border-radius: 8px; margin-bottom: 0.5rem; font-size: 0.7rem;">
+                        <p><strong>✅ CONFIRMADO</strong></p>
+                        <p>📅 07/05/2025 18:30</p>
+                        <p>🏢 Logística | ✅ Status: OK</p>
+                    </div>
+                    <div style="background: #e74c3c; padding: 0.8rem; border-radius: 8px; margin-bottom: 0.5rem; font-size: 0.7rem;">
+                        <p><strong>❌ CANCELADO</strong></p>
+                        <p>🏢 Manutenção</p>
+                    </div>
+                    <p style="font-size: 0.7rem;">📱 Notificações automáticas</p>
+                </div>
+            </div>
+            <div class="portfolio-description">
+                <p><strong>🎯 Transformação:</strong> Pedidos manuais → Bot automático</p>
+                <p><strong>✨ Recursos:</strong> Interface mobile, Telegram</p>
+                <p><strong>📱 Resultado:</strong> 100% digital</p>
+            </div>
+        </div>
+
+        <!-- Slide 7: Supply Optimizer -->
+        <div class="slide portfolio-slide">
+            <h2>📦 Supply Optimizer</h2>
+            <div class="demo-image">
+                <div style="background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%); padding: 1rem; border-radius: 10px; color: white;">
+                    <h3 style="color: #3498db; margin-bottom: 0.5rem; font-size: 0.9rem;">🤖 IA Integrada</h3>
+                    <div style="background: rgba(255,255,255,0.1); padding: 0.8rem; border-radius: 8px; margin-bottom: 0.5rem;">
+                        <h4 style="font-size: 0.8rem;">🔍 Busca Inteligente</h4>
+                        <p style="font-size: 0.7rem;">Código, local, descrição</p>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.1); padding: 0.8rem; border-radius: 8px; margin-bottom: 0.5rem;">
+                        <h4 style="font-size: 0.8rem;">📊 Análise Preditiva</h4>
+                        <p style="font-size: 0.7rem;">Demanda automática</p>
+                    </div>
+                    <p style="font-size: 0.7rem;">• Otimização em tempo real<br>• Alertas inteligentes</p>
+                </div>
+            </div>
+            <div class="portfolio-description">
+                <p><strong>🎯 Transformação:</strong> Planilhas → IA integrada</p>
+                <p><strong>✨ Recursos:</strong> Análise preditiva, otimização</p>
+                <p><strong>🤖 Resultado:</strong> Gestão inteligente</p>
+            </div>
+        </div>
+
+        <!-- Slide 8: Call to Action -->
+        <div class="slide cta-slide">
+            <h2>🚀 Vamos Começar?</h2>
+            <div class="cta-content">
+                <h3 style="font-size: 1.1rem; margin-bottom: 1rem;">💡 Transforme suas planilhas agora!</h3>
+                <p style="font-size: 0.9rem; margin-bottom: 1rem;">
+                    ✅ Dashboards Profissionais<br>
+                    ✅ Integração Telegram/Email<br>
+                    ✅ Apps Responsivos<br>
+                    ✅ Automação Completa
+                </p>
+                <a href="mailto:rogerinho.invest02@gmail.com" class="cta-button">
+                    📧 rogerinho.invest02@gmail.com
+                </a>
+                <a href="https://t.me/Rogerinho_Ramos" class="cta-button">
+                    📱 @Rogerinho_Ramos
+                </a>
+                <a href="https://www.linkedin.com/in/rogério-costa-ramos-0aa0aa26" class="cta-button">
+                    💼 LinkedIn
+                </a>
+                <a href="https://www.youtube.com/@rogerinhoramos" class="cta-button">
+                    📺 YouTube
+                </a>
+                <br>
+                <p style="font-size: 0.8rem; margin-top: 1rem;"><strong>Rogerinho Ramos</strong><br>Transformando dados em soluções</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="mobile-nav">
+        <button class="nav-btn-mobile" onclick="previousSlide()">⬅️</button>
+        <div class="slide-info" id="slideInfo">1 / 8</div>
+        <button class="nav-btn-mobile" id="playBtn" onclick="toggleAutoPlay()">▶️</button>
+        <button class="nav-btn-mobile" onclick="nextSlide()">➡️</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        let autoAdvanceInterval;
+        let isAutoPlaying = false;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        let startX = 0;
+        let startY = 0;
+
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+            
+            const progress = ((currentSlide + 1) / totalSlides) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+            document.getElementById('slideInfo').textContent = `${currentSlide + 1} / ${totalSlides}`;
+        }
+
+        function nextSlide() {
+            showSlide(currentSlide + 1);
+        }
+
+        function previousSlide() {
+            showSlide(currentSlide - 1);
+        }
+
+        function startAutoPlay() {
+            if (!isAutoPlaying) {
+                isAutoPlaying = true;
+                autoAdvanceInterval = setInterval(nextSlide, 5000);
+                document.getElementById('playBtn').textContent = '⏸️';
+            }
+        }
+
+        function stopAutoPlay() {
+            if (isAutoPlaying) {
+                isAutoPlaying = false;
+                clearInterval(autoAdvanceInterval);
+                document.getElementById('playBtn').textContent = '▶️';
+            }
+        }
+
+        function toggleAutoPlay() {
+            if (isAutoPlaying) {
+                stopAutoPlay();
+            } else {
+                startAutoPlay();
+            }
+        }
+
+        // Touch gestures
+        document.addEventListener('touchstart', function(e) {
+            startX = e.touches[0].clientX;
+            startY = e.touches[0].clientY;
+        });
+
+        document.addEventListener('touchend', function(e) {
+            if (!startX || !startY) {
+                return;
+            }
+
+            let endX = e.changedTouches[0].clientX;
+            let endY = e.changedTouches[0].clientY;
+
+            let diffX = startX - endX;
+            let diffY = startY - endY;
+
+            // Only horizontal swipes
+            if (Math.abs(diffX) > Math.abs(diffY)) {
+                if (Math.abs(diffX) > 50) { // Minimum swipe distance
+                    if (diffX > 0) {
+                        nextSlide(); // Swipe left = next
+                    } else {
+                        previousSlide(); // Swipe right = previous
+                    }
+                }
+            }
+
+            startX = 0;
+            startY = 0;
+        });
+
+        // Keyboard support
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                previousSlide();
+            } else if (e.key === 'p' || e.key === 'P') {
+                toggleAutoPlay();
+            }
+        });
+
+        // Hide swipe indicator after first interaction
+        let hasInteracted = false;
+        function hideSwipeIndicator() {
+            if (!hasInteracted) {
+                document.getElementById('swipeIndicator').style.display = 'none';
+                hasInteracted = true;
+            }
+        }
+
+        document.addEventListener('touchstart', hideSwipeIndicator);
+        document.addEventListener('click', hideSwipeIndicator);
+
+        // Initialize
+        showSlide(0);
+        
+        // Auto-hide swipe indicator after 5 seconds
+        setTimeout(() => {
+            document.getElementById('swipeIndicator').style.display = 'none';
+        }, 5000);
+
+        // Auto-start after 3 seconds
+        setTimeout(startAutoPlay, 3000);
+    </script>
+</body>
+</html>
